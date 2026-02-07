@@ -39,8 +39,8 @@ OPTIONS:
         don't allow zipping
   --port <port_number>
         port number (default range "` + fmt.Sprintf("%d-%d", defaultPortS, defaultPortE) + `")
-  --nohttps
-        don't use https aka tls
+  --http
+        don't use https
   --version
         show version number
 
@@ -63,7 +63,7 @@ func flagParse() {
 	flag.BoolVar(&dontShowQr, "noqr", false, "don't show qr")
 	flag.BoolVar(&dontAllowUploads, "noup", false, "don't allow uploads")
 	flag.BoolVar(&dontAllowZipping, "nozip", false, "don't allow zipping")
-	flag.BoolVar(&noHttps, "nohttps", false, "use https")
+	flag.BoolVar(&noHttps, "http", false, "use https")
 	v := flag.Bool("version", false, "show version number")
 	flag.Usage = func() { fmt.Print(usages) }
 	flag.Parse()
@@ -185,7 +185,7 @@ func main() {
 		fmt.Println("INFO: do not forget to use https://")
 	}
 	fmt.Printf("\n%s\n\n", m)
-	if !dontShowQr {
+	if !dontShowQr && lIP != "localhost" {
 		var err error
 		q, err := qrcode.New(m, qrcode.Medium)
 		if err == nil {
