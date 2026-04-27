@@ -1,23 +1,88 @@
-# goshare
+# GoShare
 
-## TODOS
+It is a file server or sharer over the local network.
 
-- [ ] do more testings
+It's used for quickly share files from one device to another in the local network.
 
-## DONE
+## Why use this?
 
-- [x] work on the frontend styles
-    - [x] `/browse/` page
-    - [x] `/upload` page
-    - [x] `/login` page
-- [x] don't allow uploads `--noup`
-- [x] show no files found page
-- [x] clean tmp directory
-- [x] browse files.
-- [x] upload files where you currently is
-- [x] zip dir && download
-- [x] name zip files properly
-- [x] temp dir
-- [x] auth
-- [x] bug with zip cancaletion
-- [x] network request stat
+- Password protection
+- Zip directories to download multiple files or directories.
+- Upload files to directories.
+- Create directory.
+- Super-fast transfers
+- ~Stylish~ UI (subjective)
+
+
+## Intstall
+
+### complile
+
+```bash
+go install -ldflags "-s -w" github.com/wizsk/goshare@latest
+goshare --help # make sure go bin is your path!
+```
+
+### or see releases
+
+```bash
+# linux
+cd /tmp
+wget "https://github.com/wizsk/goshare/releases/latest/download/goshare_Linux_$(uname -m).tar.gz"
+tar xf "goshare_Linux_$(uname -m).tar.gz"
+sudo mv goshare /usr/local/bin/ # or mv goshare ~/.local/bin/
+```
+
+## Usages
+
+```
+goshare --help
+Usage of goshare:
+Share specifed directy to the localnetwork.
+
+OPTIONS:
+  -d <directory_name>
+        the directory for sharing (default ".")
+  -p <password>
+        password (default is no password)
+  -s
+        don't show status, be silent
+  --noup
+        don't allow uploads or making directories
+  --nozip
+        don't allow zipping
+  --port <port_number>
+        port number (default "8001")
+  --version
+        show version number
+
+EXAMPLES
+       goshare -d "fo/bar/bazz" -p "777"
+           share "fo/bar/bazz" directory. password would be "777"
+
+```
+
+## Screenshots
+
+### auth
+
+![auth](/demo/img/auth.jpg)
+
+### browse
+
+![browse](/demo/img/browse.jpg)
+
+### upload
+
+![upload](/demo/img/up.jpg)
+
+### mobile
+
+<div align="center" style="width: 100%;">
+ <img alt="mobile browse menu" src="demo/img/mobile_browse+menu.jpg" style="max-width:400px;">
+</div>
+
+
+## Thanks to
+
+- [@mdJoOy](https://github.com/mdJoOy) for testing and contributions.

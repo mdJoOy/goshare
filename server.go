@@ -16,8 +16,13 @@ import (
 	"time"
 )
 
-//go:embed frontend/src/*
-var templateFiles embed.FS
+var (
+	//go:embed frontend/src/*
+	templateFiles embed.FS
+
+	//go:embed static/*
+	staticFiles embed.FS
+)
 
 type server struct {
 	root     string
@@ -55,6 +60,18 @@ func newTmplate() *template.Template {
 }
 
 func newServer() server {
+	if stat, err := os.Stat(rootDir); err != nil {
+		if os.IsNotExist(err) {
+			fmt.Printf("err: %q no such directory\n", rootDir)
+		} else {
+			fmt.Printf("err newServer: while opening the file: %v\n", err)
+		}
+		os.Exit(1)
+	} else if !stat.IsDir() {
+		fmt.Printf("err newServer: %q is not a directory", rootDir)
+		os.Exit(1)
+	}
+
 	tmpDirPath, err := os.MkdirTemp(os.TempDir(), "goshare_zip_")
 	if err != nil {
 		log.Fatal(err)
@@ -73,7 +90,7 @@ func newServer() server {
 	return server{
 		tmp:      tmpDirPath,
 		root:     rootDir,
-		showStat: true,
+		showStat: !dontShowStat,
 		tmpl:     tr,
 	}
 }
@@ -144,4 +161,10 @@ func (s *server) browse(w http.ResponseWriter, r *http.Request) {
 	}
 
 	_ = s.tmpl.ExecuteTemplate(w, "index.html", &svd)
+}
+
+func serveStaticFiles(w http.ResponseWriter, r *http.Request) {
+	path := strings.TrimPrefix(r.URL.Path, "/")
+	path = filepath.Clean(path)
+	http.ServeFileFS(w, r, staticFiles, path)
 }
